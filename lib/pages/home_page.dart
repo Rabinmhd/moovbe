@@ -1,11 +1,30 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:machine_test/api.dart';
 import 'package:machine_test/pages/bus_details_page_2.dart';
 import 'package:machine_test/pages/driver_list.dart';
 import 'package:machine_test/widget/bus_tile.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  Future<Map<String, dynamic>> fetchData(
+      String username, String password) async {
+    final response = await http.post(Uri.parse(baseUrl + loginApi),
+        body: {'username': username, 'password': password});
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+
+      final loginData = await json.decode(response.body);
+      return loginData;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
 //  0xff
   @override
   Widget build(BuildContext context) {
